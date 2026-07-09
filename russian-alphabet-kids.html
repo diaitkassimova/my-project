@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Учим Алфавит вместе! 🎈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#fff6d8;
+    --bg2:#cdeeff;
+    --pink:#ff8fab;
+    --purple:#a78bfa;
+    --blue:#4dc7ff;
+    --green:#57cc99;
+    --yellow:#ffd166;
+    --orange:#ff9a5a;
+    --card:#ffffff;
+    --text:#3a3355;
+    --shadow: 0 12px 30px rgba(80,60,140,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    font-family:'Nunito', sans-serif;
+    color:var(--text);
+    overflow:hidden;
+  }
+  body{
+    background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 100%);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    position:relative;
+  }
+  /* floating decorations */
+  .decor{
+    position:fixed; font-size:2.4rem; opacity:0.5; pointer-events:none;
+    animation: float 7s ease-in-out infinite;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
+  }
+  @keyframes float{
+    0%,100%{ transform: translateY(0) rotate(0deg); }
+    50%{ transform: translateY(-18px) rotate(8deg); }
+  }
+  header{
+    width:100%;
+    max-width:900px;
+    padding: 14px 16px 6px;
+    text-align:center;
+    z-index:5;
+  }
+  h1{
+    font-family:'Comfortaa', cursive;
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    margin: 6px 0 10px;
+    color:#5b4b8a;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.7);
+  }
+  .progress-strip{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+    max-width:820px;
+    margin:0 auto;
+  }
+  .prog-box{
+    width:22px; height:22px;
+    border-radius:7px;
+    background: rgba(255,255,255,0.6);
+    border:2px solid rgba(167,139,250,0.35);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.65rem; font-weight:800;
+    color:#8a7cbf;
+    transition: all .3s ease;
+  }
+  .prog-box.done{
+    background: var(--green);
+    border-color: var(--green);
+    color:white;
+    transform: scale(1.08);
+  }
+  .prog-box.current{
+    background: var(--yellow);
+    border-color: var(--orange);
+    color:#7a4a00;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.18); }
+  }
+
+  main{
+    flex:1;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 6px 16px 10px;
+    z-index:5;
+    min-height:0;
+  }
+
+  .card{
+    background: var(--card);
+    border-radius: 34px;
+    box-shadow: var(--shadow);
+    width:100%;
+    max-width: 560px;
+    min-height: 420px;
+    max-height: 74vh;
+    padding: 26px 24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    text-align:center;
+  }
+
+  /* START SCREEN */
+  .start-screen h2{
+    font-family:'Comfortaa', cursive;
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    color:#5b4b8a;
+    margin-bottom: 10px;
+  }
+  .start-screen p{
+    font-size: 1.05rem;
+    color:#6b6088;
+    max-width: 380px;
+    line-height:1.5;
+    margin-bottom: 22px;
+  }
+  .mascot{
+    font-size: 5rem;
+    margin-bottom: 8px;
+    animation: bounce 1.6s ease-in-out infinite;
+  }
+  @keyframes bounce{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-14px); }
+  }
+
+  .big-btn{
+    font-family:'Comfortaa', cursive;
+    font-size: 1.2rem;
+    font-weight:700;
+    color:white;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border:none;
+    border-radius: 50px;
+    padding: 16px 40px;
+    cursor:pointer;
+    box-shadow: 0 8px 0 #c266d1a8, 0 14px 24px rgba(167,139,250,0.4);
+    transition: transform .12s ease;
+  }
+  .big-btn:active{
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 #c266d1a8, 0 6px 12px rgba(167,139,250,0.4);
+  }
+
+  /* LETTER SCREEN */
+  .letter-screen{ display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .ring-wrap{
+    position:relative;
+    width: 220px; height:220px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  svg.ring{ position:absolute; top:0; left:0; transform: rotate(-90deg); }
+  .ring-bg{ fill:none; stroke:#f1eaff; stroke-width:12; }
+  .ring-fg{ fill:none; stroke: url(#gradRing); stroke-width:12; stroke-linecap:round; }
+  .big-letter{
+    font-family:'Comfortaa', cursive;
+    font-weight:700;
+    font-size: 6rem;
+    line-height:1;
+    color: #5b4b8a;
+    z-index:2;
+    animation: pop 0.5s cubic-bezier(.26,1.6,.5,1);
+  }
+  @keyframes pop{
+    0%{ transform: scale(0.3) rotate(-15deg); opacity:0; }
+    100%{ transform: scale(1) rotate(0deg); opacity:1; }
+  }
+  .letter-caption{
+    font-size: 1.05rem;
+    color:#8a7cbf;
+    font-weight:800;
+  }
+
+  /* WORD SCREEN */
+  .word-screen{ display:flex; flex-direction:column; align-items:center; gap:10px; animation: pop 0.45s cubic-bezier(.26,1.6,.5,1); }
+  .emoji-big{
+    font-size: 6.2rem;
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,0.15));
+  }
+  .word-text{
+    font-family:'Comfortaa', cursive;
+    font-size: 2.1rem;
+    font-weight:700;
+    color:#5b4b8a;
+  }
+  .word-text .hl{
+    color: var(--pink);
+    text-decoration: underline wavy var(--orange) 3px;
+    text-underline-offset:5px;
+  }
+  .note{
+    font-size: 0.95rem;
+    color:#8a7cbf;
+    max-width:360px;
+    line-height:1.4;
+  }
+  .stars{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    border-radius:34px;
+  }
+  .star-piece{
+    position:absolute;
+    top:-20px;
+    font-size:1.4rem;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform: translateY(480px) rotate(360deg); opacity:0; }
+  }
+
+  /* DONE SCREEN */
+  .done-screen h2{
+    font-family:'Comfortaa', cursive;
+    font-size: 1.7rem;
+    color:#5b4b8a;
+    margin-bottom:8px;
+  }
+  .done-screen .mascot{ font-size:5.5rem; }
+
+  /* CONTROLS */
+  .controls{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:center;
+    padding: 8px 16px 16px;
+    z-index:5;
+    flex-wrap:wrap;
+  }
+  .ctrl-btn{
+    border:none;
+    border-radius: 18px;
+    padding: 12px 20px;
+    font-family:'Nunito', sans-serif;
+    font-weight:800;
+    font-size: 1rem;
+    cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.08);
+    transition: transform .1s ease;
+  }
+  .ctrl-btn:active{ transform: translateY(4px); box-shadow:none; }
+  .ctrl-next{ background: var(--green); color:white; }
+  .ctrl-repeat{ background: var(--yellow); color:#7a4a00; }
+  .ctrl-sound{ background:#eee9ff; color:#5b4b8a; min-width:52px; justify-content:center; }
+  .ctrl-stop{ background:#ffb3b3; color:#7a1f1f; }
+  .hidden{ display:none !important; }
+
+  @media (max-height: 700px){
+    .card{ min-height: 360px; padding: 18px; }
+    .ring-wrap{ width:180px; height:180px; }
+    .big-letter{ font-size:4.6rem; }
+    .emoji-big{ font-size:4.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="decor" style="top:6%; left:4%;">☁️</div>
+<div class="decor" style="top:12%; right:5%; animation-delay:1s;">🌈</div>
+<div class="decor" style="bottom:10%; left:6%; animation-delay:2s;">⭐</div>
+<div class="decor" style="bottom:14%; right:4%; animation-delay:1.5s;">🎈</div>
+
+<header>
+  <h1>Учим Алфавит вместе! 🎈</h1>
+  <div class="progress-strip" id="progressStrip"></div>
+</header>
+
+<main>
+  <div class="card" id="card">
+
+    <!-- START -->
+    <div class="start-screen" id="startScreen">
+      <div class="mascot">🦊</div>
+      <h2>Привет! Готов учить буквы?</h2>
+      <p>Я буду показывать букву, а потом — картинку, которая на неё начинается. Слушай и повторяй!</p>
+      <button class="big-btn" id="startBtn">Начать! ▶️</button>
+    </div>
+
+    <!-- LETTER -->
+    <div class="letter-screen hidden" id="letterScreen">
+      <div class="ring-wrap">
+        <svg class="ring" width="220" height="220" viewBox="0 0 220 220">
+          <defs>
+            <linearGradient id="gradRing" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff8fab"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="110" cy="110" r="98"></circle>
+          <circle class="ring-fg" id="ringFg" cx="110" cy="110" r="98"></circle>
+        </svg>
+        <div class="big-letter" id="bigLetter">А</div>
+      </div>
+      <div class="letter-caption">Смотри внимательно! 👀</div>
+    </div>
+
+    <!-- WORD -->
+    <div class="word-screen hidden" id="wordScreen">
+      <div class="stars" id="stars"></div>
+      <div class="emoji-big" id="wordEmoji">🍉</div>
+      <div class="word-text" id="wordText">Арбуз</div>
+      <div class="note hidden" id="wordNote"></div>
+    </div>
+
+    <!-- DONE -->
+    <div class="done-screen hidden" id="doneScreen">
+      <div class="mascot">🏆</div>
+      <h2>Ура! Ты выучил весь алфавит!</h2>
+      <p>Ты просто молодец! Можем повторить ещё раз.</p>
+      <button class="big-btn" id="restartBtn">Начать сначала 🔁</button>
+    </div>
+
+  </div>
+</main>
+
+<div class="controls" id="controls">
+  <button class="ctrl-btn ctrl-sound" id="soundBtn" title="Звук">🔊</button>
+  <button class="ctrl-btn ctrl-repeat hidden" id="repeatBtn">🔁 Повторить</button>
+  <button class="ctrl-btn ctrl-next hidden" id="nextBtn">Дальше ➡️</button>
+  <button class="ctrl-btn ctrl-stop hidden" id="stopBtn">⏹ Остановить</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- DATA ----------
+  const LETTERS = [
+    {l:"А", w:"Арбуз",     e:"🍉"},
+    {l:"Б", w:"Барабан",   e:"🥁"},
+    {l:"В", w:"Волк",      e:"🐺"},
+    {l:"Г", w:"Гриб",      e:"🍄"},
+    {l:"Д", w:"Дом",       e:"🏠"},
+    {l:"Е", w:"Ель",       e:"🌲"},
+    {l:"Ё", w:"Ёжик",      e:"🦔"},
+    {l:"Ж", w:"Жираф",     e:"🦒"},
+    {l:"З", w:"Заяц",      e:"🐰"},
+    {l:"И", w:"Индюк",     e:"🦃"},
+    {l:"Й", w:"Йогурт",    e:"🥛"},
+    {l:"К", w:"Кот",       e:"🐱"},
+    {l:"Л", w:"Лев",       e:"🦁"},
+    {l:"М", w:"Мышь",      e:"🐭"},
+    {l:"Н", w:"Носорог",   e:"🦏"},
+    {l:"О", w:"Обезьяна",  e:"🐒"},
+    {l:"П", w:"Пингвин",   e:"🐧"},
+    {l:"Р", w:"Рыба",      e:"🐟"},
+    {l:"С", w:"Слон",      e:"🐘"},
+    {l:"Т", w:"Тигр",      e:"🐯"},
+    {l:"У", w:"Утка",      e:"🦆"},
+    {l:"Ф", w:"Фламинго",  e:"🦩"},
+    {l:"Х", w:"Хомяк",     e:"🐹"},
+    {l:"Ц", w:"Цыплёнок",  e:"🐤"},
+    {l:"Ч", w:"Черепаха",  e:"🐢"},
+    {l:"Ш", w:"Шар",       e:"🎈"},
+    {l:"Щ", w:"Щенок",     e:"🐶"},
+    {l:"Ъ", w:"Подъезд",   e:"🚪", note:"Эта буква не бывает в начале слова. Она делает соседние буквы твёрже и прячется внутри слова.", special:true},
+    {l:"Ы", w:"Мыло",      e:"🧼", note:"Эта буква не бывает в начале слова. Послушай, как она звучит внутри слова!", special:true},
+    {l:"Ь", w:"Конь",      e:"🐴", note:"Эта буква не бывает в начале слова. Она делает соседние буквы мягкими!", special:true},
+    {l:"Э", w:"Экскаватор",e:"🚜"},
+    {l:"Ю", w:"Юла",       e:"🌀"},
+    {l:"Я", w:"Яблоко",    e:"🍎"}
+  ];
+
+  const LETTER_MS = 5000;   // время показа буквы
+  const WORD_MS   = 4500;   // время показа картинки перед авто-переходом
+
+  // ---------- STATE ----------
+  let pool = [];
+  let currentIndex = -1;
+  let learned = new Set();
+  let soundOn = true;
+  let phase = "start"; // start | letter | word | done
+  let timers = [];
+
+  // ---------- DOM ----------
+  const el = {
+    progressStrip: document.getElementById('progressStrip'),
+    startScreen: document.getElementById('startScreen'),
+    letterScreen: document.getElementById('letterScreen'),
+    wordScreen: document.getElementById('wordScreen'),
+    doneScreen: document.getElementById('doneScreen'),
+    startBtn: document.getElementById('startBtn'),
+    restartBtn: document.getElementById('restartBtn'),
+    bigLetter: document.getElementById('bigLetter'),
+    ringFg: document.getElementById('ringFg'),
+    wordEmoji: document.getElementById('wordEmoji'),
+    wordText: document.getElementById('wordText'),
+    wordNote: document.getElementById('wordNote'),
+    stars: document.getElementById('stars'),
+    soundBtn: document.getElementById('soundBtn'),
+    repeatBtn: document.getElementById('repeatBtn'),
+    nextBtn: document.getElementById('nextBtn'),
+    stopBtn: document.getElementById('stopBtn'),
+  };
+
+  const RING_LEN = 2 * Math.PI * 98;
+  el.ringFg.style.strokeDasharray = RING_LEN;
+  el.ringFg.style.strokeDashoffset = 0;
+
+  // ---------- HELPERS ----------
+  function clearTimers(){
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+    if (el.ringFg._raf) { cancelAnimationFrame(el.ringFg._raf); el.ringFg._raf = null; }
+  }
+
+  function shuffledIndices(excludeLast){
+    let arr = LETTERS.map((_, i) => i);
+    for (let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    if (excludeLast !== undefined && arr[0] === excludeLast && arr.length > 1){
+      [arr[0], arr[1]] = [arr[1], arr[0]];
+    }
+    return arr;
+  }
+
+  function buildProgressStrip(){
+    el.progressStrip.innerHTML = "";
+    LETTERS.forEach((item, i) => {
+      const box = document.createElement('div');
+      box.className = 'prog-box';
+      box.textContent = item.l;
+      box.id = 'prog-' + i;
+      el.progressStrip.appendChild(box);
+    });
+  }
+
+  function updateProgressStrip(){
+    LETTERS.forEach((_, i) => {
+      const box = document.getElementById('prog-' + i);
+      box.classList.toggle('done', learned.has(i) && i !== currentIndex);
+      box.classList.toggle('current', i === currentIndex);
+    });
+  }
+
+  let ruVoice = null;
+  function pickBestRuVoice(){
+    if (!('speechSynthesis' in window)) return;
+    const voices = window.speechSynthesis.getVoices();
+    const ruVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('ru'));
+    if (ruVoices.length === 0){ ruVoice = null; return; }
+    const scored = ruVoices.map(v => {
+      let score = 0;
+      if (!v.localService) score += 2; // network voices are usually more natural
+      if (/google/i.test(v.name)) score += 3;
+      if (/natural|neural|premium|enhanced|online/i.test(v.name)) score += 2;
+      if (v.default) score += 1;
+      return { v, score };
+    });
+    scored.sort((a, b) => b.score - a.score);
+    ruVoice = scored[0].v;
+  }
+  if ('speechSynthesis' in window){
+    pickBestRuVoice();
+    window.speechSynthesis.onvoiceschanged = pickBestRuVoice;
+  }
+
+  function speak(text){
+    if (!soundOn) return;
+    if (!('speechSynthesis' in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ru-RU';
+      if (ruVoice) u.voice = ruVoice;
+      u.rate = 0.85;
+      u.pitch = 1.15;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  function showScreen(name){
+    el.startScreen.classList.toggle('hidden', name !== 'start');
+    el.letterScreen.classList.toggle('hidden', name !== 'letter');
+    el.wordScreen.classList.toggle('hidden', name !== 'word');
+    el.doneScreen.classList.toggle('hidden', name !== 'done');
+    el.repeatBtn.classList.toggle('hidden', name === 'start' || name === 'done');
+    el.nextBtn.classList.toggle('hidden', name === 'start' || name === 'done');
+    el.stopBtn.classList.toggle('hidden', name === 'start' || name === 'done');
+    phase = name;
+  }
+
+  function spawnStars(){
+    el.stars.innerHTML = "";
+    const pieces = ["⭐","✨","🌟","💫"];
+    for (let i = 0; i < 14; i++){
+      const s = document.createElement('div');
+      s.className = 'star-piece';
+      s.textContent = pieces[Math.floor(Math.random()*pieces.length)];
+      s.style.left = Math.random()*100 + '%';
+      s.style.animationDuration = (1.2 + Math.random()*1.2) + 's';
+      s.style.animationDelay = (Math.random()*0.4) + 's';
+      s.style.fontSize = (1 + Math.random()*1.2) + 'rem';
+      el.stars.appendChild(s);
+    }
+  }
+
+  function highlightWord(word, letter){
+    const idx = word.toUpperCase().indexOf(letter.toUpperCase());
+    if (idx === -1) return word;
+    return word.slice(0, idx) + '<span class="hl">' + word.slice(idx, idx+1) + '</span>' + word.slice(idx+1);
+  }
+
+  // ---------- FLOW ----------
+  function nextLetter(){
+    clearTimers();
+    if (pool.length === 0){
+      if (learned.size >= LETTERS.length){
+        finishAll();
+        return;
+      }
+      pool = shuffledIndices(currentIndex);
+    }
+    currentIndex = pool.shift();
+    learned.add(currentIndex);
+    updateProgressStrip();
+    playLetterPhase();
+  }
+
+  function playLetterPhase(){
+    showScreen('letter');
+    const item = LETTERS[currentIndex];
+    el.bigLetter.textContent = item.l + item.l.toLowerCase();
+    el.bigLetter.style.animation = 'none';
+    void el.bigLetter.offsetWidth;
+    el.bigLetter.style.animation = '';
+
+    speak(item.l);
+
+    // animate ring over LETTER_MS
+    const start = performance.now();
+    function frame(now){
+      const t = Math.min(1, (now - start) / LETTER_MS);
+      el.ringFg.style.strokeDashoffset = RING_LEN * t;
+      if (t < 1){
+        el.ringFg._raf = requestAnimationFrame(frame);
+      }
+    }
+    el.ringFg.style.strokeDashoffset = 0;
+    el.ringFg._raf = requestAnimationFrame(frame);
+
+    const t = setTimeout(playWordPhase, LETTER_MS);
+    timers.push(t);
+  }
+
+  function playWordPhase(){
+    clearTimers();
+    showScreen('word');
+    const item = LETTERS[currentIndex];
+    el.wordEmoji.textContent = item.e;
+    el.wordText.innerHTML = highlightWord(item.w, item.l);
+    if (item.note){
+      el.wordNote.textContent = item.note;
+      el.wordNote.classList.remove('hidden');
+    } else {
+      el.wordNote.classList.add('hidden');
+    }
+    spawnStars();
+    speak(item.w);
+
+    const t = setTimeout(nextLetter, WORD_MS);
+    timers.push(t);
+  }
+
+  function goNext(){
+    clearTimers();
+    if (phase === 'letter'){
+      playWordPhase();
+    } else if (phase === 'word'){
+      nextLetter();
+    }
+  }
+
+  function repeatCurrent(){
+    clearTimers();
+    if (phase === 'word'){
+      playWordPhase();
+    } else if (phase === 'letter'){
+      playLetterPhase();
+    }
+  }
+
+  function stopLearning(){
+    clearTimers();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    showScreen('start');
+  }
+
+  function finishAll(){
+    clearTimers();
+    showScreen('done');
+    speak("Молодец! Ты выучил весь алфавит!");
+  }
+
+  function startGame(){
+    learned = new Set();
+    pool = shuffledIndices();
+    updateProgressStrip();
+    nextLetter();
+  }
+
+  // ---------- EVENTS ----------
+  el.startBtn.addEventListener('click', startGame);
+  el.restartBtn.addEventListener('click', startGame);
+  el.nextBtn.addEventListener('click', goNext);
+  el.repeatBtn.addEventListener('click', repeatCurrent);
+  el.stopBtn.addEventListener('click', stopLearning);
+  el.soundBtn.addEventListener('click', () => {
+    soundOn = !soundOn;
+    el.soundBtn.textContent = soundOn ? '🔊' : '🔇';
+    if (!soundOn && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+  buildProgressStrip();
+})();
+</script>
+</body>
+</html>
